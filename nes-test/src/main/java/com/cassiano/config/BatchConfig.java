@@ -1,6 +1,7 @@
 package com.cassiano.config;
 
 import com.cassiano.listener.JobCompletionListener;
+import com.cassiano.services.SomeService;
 import com.cassiano.step.Processor;
 import com.cassiano.step.Reader;
 import com.cassiano.step.Writer;
@@ -23,6 +24,9 @@ public class BatchConfig {
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
 
+    @Autowired
+    private SomeService someService;
+
     @Bean
     public Job processJob() {
         return jobBuilderFactory.get("processJob")
@@ -36,7 +40,7 @@ public class BatchConfig {
                 .get("orderStep1")
                 .<String, String>chunk(1)
                 .reader(new Reader())
-                .processor(new Processor())
+                .processor(new Processor(someService))
                 .writer(new Writer())
                 .build();
     }
