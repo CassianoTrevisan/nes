@@ -1,4 +1,4 @@
-package com.cassiano;
+package com.cassiano.model;
 
 import lombok.Getter;
 import lombok.Setter;
