@@ -31,8 +31,6 @@ public class BatchConfig {
     @Autowired
     private ConfigLoaderService configLoaderService;
 
-
-
     @Bean
     public Job processJob() {
         return jobBuilderFactory.get("processJob")
@@ -48,8 +46,8 @@ public class BatchConfig {
         return stepBuilderFactory
                 .get("orderStep1")
                 .<String, String>chunk(1)
-                .reader(reader())
-                .processor(new Processor(someService))
+                .reader(new Reader(configLoaderService))
+                .processor(new Processor(someService, configLoaderService))
                 .writer(new Writer())
                 .build();
     }
@@ -57,11 +55,6 @@ public class BatchConfig {
     @Bean
     public JobExecutionListener listener() {
         return new JobCompletionListener();
-    }
-
-    @Bean
-    public Reader reader() {
-        return new Reader(configLoaderService);
     }
 
 }

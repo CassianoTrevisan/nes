@@ -7,6 +7,7 @@ import com.cassiano.repositories.AnomalyConfigRepo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 @Service
+@Getter
 public class ConfigLoaderService {
 
     @Value("${anomaly.file.path}")
@@ -34,10 +36,8 @@ public class ConfigLoaderService {
 
             while (jsonReader.hasNext()) { //next json array element
                 AnomalyConfig anomalyConfig = gson.fromJson(jsonReader, AnomalyConfig.class);
-
-                System.out.println(anomalyConfig);
-
-            }
+                anomalyConfigRepo.addAnomaly(anomalyConfig);
+                          }
             jsonReader.endArray();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
