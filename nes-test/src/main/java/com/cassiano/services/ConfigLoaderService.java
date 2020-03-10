@@ -1,7 +1,9 @@
 package com.cassiano.services;
 
-import com.cassiano.helper.Properties;
+import com.cassiano.anomalies.Anomaly;
+import com.cassiano.model.AnomalyConfig;
 import com.cassiano.model.Measurement;
+import com.cassiano.repositories.AnomalyConfigRepo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
@@ -12,35 +14,31 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-
 @Service
-public class SomeService {
+public class ConfigLoaderService {
 
-    @Value("${files.directory}")
-    private String jsonFilePath;
+    @Value("${anomaly.file.path}")
+    private String configFilePath;
 
-    public void parse() {
+    @Autowired
+    private AnomalyConfigRepo anomalyConfigRepo;
 
-        long start = System.currentTimeMillis();
-
-        //create JsonReader object and pass it the json file,json source or json text.
+    public void loadConfigFileToRepo(){
         try (JsonReader jsonReader = new JsonReader(
                 new InputStreamReader(
-                        new FileInputStream(jsonFilePath), StandardCharsets.UTF_8))) {
+                        new FileInputStream(configFilePath), StandardCharsets.UTF_8))) {
 
             Gson gson = new GsonBuilder().create();
 
             jsonReader.beginArray(); //start of json array
-            int numberOfRecords = 0;
+
             while (jsonReader.hasNext()) { //next json array element
-                Measurement document = gson.fromJson(jsonReader, Measurement.class);
-                //do something real
-                System.out.println(document);
-                numberOfRecords++;
+                AnomalyConfig anomalyConfig = gson.fromJson(jsonReader, AnomalyConfig.class);
+
+                System.out.println(anomalyConfig);
+
             }
             jsonReader.endArray();
-            System.out.println("Total Records Found : " + numberOfRecords);
-            System.out.println("Total Time Taken : " + (System.currentTimeMillis() - start) / 1000 + " secs");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {

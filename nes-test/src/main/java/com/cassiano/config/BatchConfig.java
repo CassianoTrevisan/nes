@@ -31,7 +31,10 @@ public class BatchConfig {
     public Job processJob() {
         return jobBuilderFactory.get("processJob")
                 .incrementer(new RunIdIncrementer())
-                .listener(listener()).flow(orderStep1()).end().build();
+                .listener(listener())
+                .flow(orderStep1())
+                .end()
+                .build();
     }
 
     @Bean

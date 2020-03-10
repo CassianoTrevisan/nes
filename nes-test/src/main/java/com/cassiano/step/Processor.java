@@ -2,7 +2,9 @@ package com.cassiano.step;
 
 import com.cassiano.services.SomeService;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Processor implements ItemProcessor<String, String> {
 
     private SomeService someService;
