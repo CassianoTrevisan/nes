@@ -8,14 +8,15 @@ import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
-@Component
 public class Reader implements ItemReader<String> {
 
-    @Autowired
     private ConfigLoaderService configLoaderService;
 
     private int count = 0;
+
+    public Reader(ConfigLoaderService configLoaderService) {
+        this.configLoaderService = configLoaderService;
+    }
 
     @Override
     public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
@@ -26,7 +27,7 @@ public class Reader implements ItemReader<String> {
     }
 
     public void loadAnomalyConfig() {
-       // configLoaderService.loadConfigFileToRepo();
+        configLoaderService.loadConfigFileToRepo();
     }
 
 }
